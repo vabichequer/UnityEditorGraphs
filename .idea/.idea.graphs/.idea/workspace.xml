@@ -2,15 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Extensions.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Users/user/graphs/Assets/Editor/BaseEditorWindow.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -86,7 +88,7 @@
       <workItem from="1679823740928" duration="4617000" />
       <workItem from="1679902641747" duration="26000" />
       <workItem from="1679944882342" duration="877000" />
-      <workItem from="1680278982317" duration="6254000" />
+      <workItem from="1680278982317" duration="4704000" />
     </task>
     <servers />
   </component>
@@ -95,17 +97,6 @@
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
