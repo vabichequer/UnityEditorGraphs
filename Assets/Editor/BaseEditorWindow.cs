@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Enums;
 using Extensions;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -13,7 +14,7 @@ using Object = UnityEngine.Object;
 
 namespace Editor
 {
-    public class BaseEditorWindow : EditorWindow
+    public class BaseEditorWindow : DrawPrimitives
     {
         private GameObject _objectToAnalyze;
         private DropdownField _componentDropDown, _variableDropDown;
@@ -79,11 +80,29 @@ namespace Editor
             
         }
 
+        private void HandleDrawing()
+        {
+            /*if (Event.current.type is EventType.Repaint)
+            {*/
+                InitializePlot();
+                DrawBackground(BackgroundConfig.BackgroundTypes.SOLID_COLOR, Color.black);
+                var lowLeft = new Vector3(0, 250, 0);
+                var highRight = new Vector3(250, 0, 0);
+                DrawSquare(lowLeft, highRight, Color.red);
+                FinalizePlot();
+            //}
+        }
+
+        private void Update()
+        {
+            Repaint();
+        }
+
         public void CreateGUI()
         {
             // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
-
+            
             // Separate the window into variables and plot
             var splitView = new TwoPaneSplitView(0, 200, TwoPaneSplitViewOrientation.Horizontal);
             root.Add(splitView);
@@ -91,7 +110,7 @@ namespace Editor
             // Panels from the splitview
             var leftPane = new VisualElement();
             splitView.Add(leftPane);
-            var rightPane = new VisualElement();
+            var rightPane = new IMGUIContainer();
             splitView.Add(rightPane);
             
             // Add a GameObject to expose possible variables
@@ -106,6 +125,10 @@ namespace Editor
             _variableDropDown = new DropdownField();
             _variableDropDown.RegisterValueChangedCallback(PlotSelectedVariable);
             leftPane.Add(_variableDropDown);
+
+            var glContent = new IMGUIContainer(HandleDrawing);
+            
+            rightPane.Add(glContent);
         }
     }
 }
