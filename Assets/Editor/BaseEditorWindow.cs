@@ -10,6 +10,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
 using Object = UnityEngine.Object;
 
 namespace Editor
@@ -82,15 +83,15 @@ namespace Editor
 
         private void HandleDrawing()
         {
-            /*if (Event.current.type is EventType.Repaint)
-            {*/
+            if (Event.current.type is EventType.Repaint)
+            {
                 InitializePlot();
-                DrawBackground(BackgroundConfig.BackgroundTypes.SOLID_COLOR, Color.black);
-                var lowLeft = new Vector3(0, 250, 0);
-                var highRight = new Vector3(250, 0, 0);
-                DrawSquare(lowLeft, highRight, Color.red);
+                DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
+                /*var lowLeft = new Vector3(10, 400, 0);
+                var highRight = new Vector3(400, 0, 0);
+                DrawSquare(lowLeft, highRight, Color.red);*/
                 FinalizePlot();
-            //}
+            }
         }
 
         private void Update()
@@ -105,12 +106,14 @@ namespace Editor
             
             // Separate the window into variables and plot
             var splitView = new TwoPaneSplitView(0, 200, TwoPaneSplitViewOrientation.Horizontal);
+            splitView.usageHints = UsageHints.GroupTransform;
             root.Add(splitView);
             
             // Panels from the splitview
             var leftPane = new VisualElement();
             splitView.Add(leftPane);
-            var rightPane = new IMGUIContainer();
+            var rightPane = new VisualElement();
+            rightPane.usageHints = UsageHints.GroupTransform;
             splitView.Add(rightPane);
             
             // Add a GameObject to expose possible variables
@@ -127,7 +130,8 @@ namespace Editor
             leftPane.Add(_variableDropDown);
 
             var glContent = new IMGUIContainer(HandleDrawing);
-            
+            glContent.usageHints = UsageHints.DynamicColor;
+
             rightPane.Add(glContent);
         }
     }

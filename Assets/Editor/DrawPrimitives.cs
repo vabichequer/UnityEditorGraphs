@@ -1,10 +1,8 @@
 using System;
-using System.Security.Cryptography;
 using Enums;
 using Extensions;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Editor
 {
@@ -27,13 +25,11 @@ namespace Editor
                 hideFlags = HideFlags.HideAndDontSave
             };
 
-            UsefulMethods.Print("Width: ", _width, " height: ", _height);
-
             _mat.SetPass(0);
 
             //GUI.BeginClip(rect);
             GL.PushMatrix();
-            GL.LoadPixelMatrix(0, _width, _height, 0);
+
         }
 
         public void DrawLine(Vector3 start, Vector3 end, Color color)
@@ -76,7 +72,7 @@ namespace Editor
 
         protected void DrawBackground(BackgroundConfig.BackgroundTypes bgType, Color color, int spacing=0)
         {
-            GL.Clear(true, true, color);
+            DrawSquare(new Vector3(0, _height, 0), new Vector3(_width, 0, 0), color);
             switch (bgType)
             {
                 case BackgroundConfig.BackgroundTypes.SOLID_COLOR:
