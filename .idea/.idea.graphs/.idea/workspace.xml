@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Extensions/Utils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Extensions/Utils.cs.meta" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +95,8 @@
       <workItem from="1679902641747" duration="26000" />
       <workItem from="1679944882342" duration="877000" />
       <workItem from="1680278982317" duration="4704000" />
-      <workItem from="1680765201908" duration="3294000" />
+      <workItem from="1680765201908" duration="12009000" />
+      <workItem from="1680788739103" duration="924000" />
     </task>
     <servers />
   </component>
@@ -122,16 +125,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs</url>
-          <line>136</line>
-          <properties documentPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" initialLine="136" containingFunctionPresentation="method 'CreateGUI'">
+          <line>59</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" initialLine="59" containingFunctionPresentation="method 'OnObjectChanged'">
             <startOffsets>
-              <option value="4910" />
+              <option value="1961" />
             </startOffsets>
             <endOffsets>
-              <option value="4935" />
+              <option value="1990" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

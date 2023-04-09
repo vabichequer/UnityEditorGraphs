@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using Enums;
-using Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,12 +12,12 @@ namespace Editor
         
         private Material _mat;
         private Shader _shader;
-        private float _height, _width;
+        public float height, width;
 
-        protected void InitializePlot()
+        protected void InitializePlot(float usedWidth = 0, float usedHeight = 0)
         {
-            _width = position.width;
-            _height = position.height;
+            width = position.width - usedWidth;
+            height = position.height;
             _shader = Shader.Find("Hidden/Internal-Colored");
             
             _mat = new Material(_shader)
@@ -26,12 +26,26 @@ namespace Editor
             };
 
             _mat.SetPass(0);
-
-            //GUI.BeginClip(rect);
             GL.PushMatrix();
 
         }
 
+        public void DrawLineArray(List<int> points, Color color)
+        {
+            while (points.Count > width)
+            {
+                points.RemoveAt(0);
+            }
+            
+            for(var i = 1; i < points.Count; i++)
+            {
+                var start = new Vector3(i - 1, points[i - 1], 0);
+                var end = new Vector3(i, points[i], 0);
+                
+                DrawLine(start, end,  color);
+            }
+        }
+        
         public void DrawLine(Vector3 start, Vector3 end, Color color)
         {
             GL.Begin(GL.LINES);
@@ -72,16 +86,16 @@ namespace Editor
 
         protected void DrawBackground(BackgroundConfig.BackgroundTypes bgType, Color color, int spacing=0)
         {
-            DrawSquare(new Vector3(0, _height, 0), new Vector3(_width, 0, 0), color);
+            DrawSquare(new Vector3(0, height, 0), new Vector3(width, 0, 0), color);
             switch (bgType)
             {
                 case BackgroundConfig.BackgroundTypes.SOLID_COLOR:
                     break;
                 case BackgroundConfig.BackgroundTypes.CHECKERED:
                     var start = new Vector3(0, 0, 0);
-                    var end = new Vector3(_width, 0, 0);
+                    var end = new Vector3(width, 0, 0);
                     
-                    for (var i = 0; i < _height; i++)
+                    for (var i = 0; i < height; i++)
                     {
                         DrawLine(start, end, Color.gray);
                         start.y += spacing;
@@ -89,9 +103,9 @@ namespace Editor
                     }
 
                     start = new Vector3(0, 0, 0);
-                    end = new Vector3(0, _height, 0);
+                    end = new Vector3(0, height, 0);
                     
-                    for (var i = 0; i < _width; i++)
+                    for (var i = 0; i < width; i++)
                     {
                         DrawLine(start, end, Color.gray);
                         start.x += spacing;
@@ -106,7 +120,6 @@ namespace Editor
         protected void FinalizePlot()
         {
             GL.PopMatrix();
-            //GUI.EndClip();
             Handles.EndGUI();
         }
     }

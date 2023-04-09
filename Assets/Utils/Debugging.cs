@@ -1,9 +1,9 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Extensions
+namespace Utils
 {
-    public class UsefulMethods
+    public class Debugging
     {
         public static void Print(params object[] args)
         {

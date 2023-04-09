@@ -1,26 +1,33 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Enums;
-using Extensions;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
-using Button = UnityEngine.UIElements.Button;
+using Utils;
 using Object = UnityEngine.Object;
 
 namespace Editor
 {
     public class BaseEditorWindow : DrawPrimitives
     {
+        // Window structure
+        private VisualElement _leftPane, _rightPane;
+        
+        // Object's references
         private GameObject _objectToAnalyze;
         private DropdownField _componentDropDown, _variableDropDown;
+        private ObjectField _gameObjectField;
         private FieldInfo[] _fields;
+        private FieldInfo _selectedField;
+        private object _selectedVariable;
+        private bool _isVariableSelected;
         
+        // Graph references
+        private List<int> _valuesToPlot;
+
         [MenuItem("Window/Graphs/Base window")]
         public static void ShowWindow()
         {
@@ -40,10 +47,23 @@ namespace Editor
                 // Loop through each component
                 foreach (var component in components)
                 {
+                    Debugging.Print(component.GetType().Name);
+                    
                     // Get all the public fields of the component
-                    var fields = component.GetType().GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
-                    // If the component has any public fields, print its type to the console
+                    var fields = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+                    var properties = component.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    
+                    foreach (var field in fields)
+                    {
+                        Debugging.Print(field.Name);
+                    }
+                    
+                    foreach (var property in properties)
+                    {
+                        Debugging.Print(property.Name, property.PropertyType, Numeric.Is(property.PropertyType));
+                    }
+                    
+                    // If the component has any public fields, add its type to the list
                     if (fields.Length > 0)
                     {
                         _componentDropDown.choices.Add(component.GetType().Name);
@@ -72,31 +92,47 @@ namespace Editor
 
         private void PlotSelectedVariable(ChangeEvent<string> evt)
         {
-            object obj = _objectToAnalyze.GetComponent(_componentDropDown.value);
-            var selectedField = _fields[_variableDropDown.index];
-            
+            _selectedVariable = _objectToAnalyze.GetComponent(_componentDropDown.value);
+            _selectedField = _fields[_variableDropDown.index];
+            _isVariableSelected = true;
+
             //  Selected variable name: evt.newValue 
             //  and value: selectedField.GetValue(obj))
-            
-            
         }
 
         private void HandleDrawing()
         {
             if (Event.current.type is EventType.Repaint)
             {
-                InitializePlot();
+                InitializePlot(_leftPane.resolvedStyle.width);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
-                /*var lowLeft = new Vector3(10, 400, 0);
-                var highRight = new Vector3(400, 0, 0);
-                DrawSquare(lowLeft, highRight, Color.red);*/
+                
+                //DrawSquare(new Vector3(width/2, height, 0), new Vector3(width, 250, 0), Color.cyan);
+                
+                DrawLineArray(_valuesToPlot, Color.green);
                 FinalizePlot();
             }
         }
 
+        private void UpdateVariables()
+        {
+            if (!_isVariableSelected)
+            {
+                return;
+            }
+
+//            _valuesToPlot.Add(Convert.ToInt32(_selectedField.GetValue(_selectedVariable)));
+        }
+        
         private void Update()
         {
+            UpdateVariables();
             Repaint();
+        }
+
+        private void ClearData()
+        {
+            _valuesToPlot = new List<int>();
         }
 
         public void CreateGUI()
@@ -110,29 +146,33 @@ namespace Editor
             root.Add(splitView);
             
             // Panels from the splitview
-            var leftPane = new VisualElement();
-            splitView.Add(leftPane);
-            var rightPane = new VisualElement();
-            rightPane.usageHints = UsageHints.GroupTransform;
-            splitView.Add(rightPane);
+            _leftPane = new VisualElement();
+            splitView.Add(_leftPane);
+            _rightPane = new VisualElement
+            {
+                usageHints = UsageHints.GroupTransform
+            };
+            splitView.Add(_rightPane);
             
             // Add a GameObject to expose possible variables
-            var gameObjectField = new ObjectField("Object to analyze");
-            leftPane.Add(gameObjectField);
-            gameObjectField.RegisterValueChangedCallback(OnObjectChanged);
+            _gameObjectField = new ObjectField("Object to analyze");
+            _leftPane.Add(_gameObjectField);
+            _gameObjectField.RegisterValueChangedCallback(OnObjectChanged);
 
             _componentDropDown = new DropdownField();
             _componentDropDown.RegisterValueChangedCallback(OnComponentDropDownSelection);
-            leftPane.Add(_componentDropDown);
+            _leftPane.Add(_componentDropDown);
 
             _variableDropDown = new DropdownField();
             _variableDropDown.RegisterValueChangedCallback(PlotSelectedVariable);
-            leftPane.Add(_variableDropDown);
+            _leftPane.Add(_variableDropDown);
 
             var glContent = new IMGUIContainer(HandleDrawing);
             glContent.usageHints = UsageHints.DynamicColor;
 
-            rightPane.Add(glContent);
+            _rightPane.Add(glContent);
+            
+            ClearData();
         }
     }
 }
