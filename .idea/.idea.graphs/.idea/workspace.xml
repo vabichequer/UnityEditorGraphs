@@ -5,8 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Extensions/Utils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Extensions/UsefulMethods.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Extensions/Utils.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Utils/IsNumeric.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Utils/IsNumeric.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +33,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.5008183&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -72,10 +72,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="63353">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="63353" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -96,7 +96,8 @@
       <workItem from="1679944882342" duration="877000" />
       <workItem from="1680278982317" duration="4704000" />
       <workItem from="1680765201908" duration="12009000" />
-      <workItem from="1680788739103" duration="924000" />
+      <workItem from="1680788739103" duration="20213000" />
+      <workItem from="1681235510337" duration="804000" />
     </task>
     <servers />
   </component>
@@ -119,24 +120,5 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs</url>
-          <line>59</line>
-          <properties documentPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" initialLine="59" containingFunctionPresentation="method 'OnObjectChanged'">
-            <startOffsets>
-              <option value="1961" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1990" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

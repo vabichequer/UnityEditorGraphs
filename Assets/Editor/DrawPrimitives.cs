@@ -30,13 +30,8 @@ namespace Editor
 
         }
 
-        public void DrawLineArray(List<int> points, Color color)
+        public void DrawLineArray(List<float> points, Color color)
         {
-            while (points.Count > width)
-            {
-                points.RemoveAt(0);
-            }
-            
             for(var i = 1; i < points.Count; i++)
             {
                 var start = new Vector3(i - 1, points[i - 1], 0);
