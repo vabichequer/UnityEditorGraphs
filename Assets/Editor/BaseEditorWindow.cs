@@ -53,8 +53,7 @@ namespace Editor
                 // Get all the components attached to this gameobject
                 var components = _objectToAnalyze.GetComponents<Component>();
 
-                _componentDropDown.choices = new List<string>();
-                _variableDropDown.choices = new List<string>();
+                ClearData(DataHandling.ClearDataModes.Initialize);
                 
                 // Loop through each component
                 foreach (var component in components)
@@ -93,20 +92,21 @@ namespace Editor
         private void OnComponentDropDownSelection(ChangeEvent<string> evt)
         {
             var component = evt.newValue;
-            _isVariableSelected = false;
+            
+            ClearData(DataHandling.ClearDataModes.ComponentChange);
 
             if (evt.newValue == null)
             {
                 return;
             }
 
+            Debugging.Print("Is obj null?", _objectToAnalyze == null);
+            
             // Get all the public fields of the given type from the component
             _fields = _objectToAnalyze.GetComponent(component).GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
             _properties = _objectToAnalyze.GetComponent(component).GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            _variableDropDown.choices = new List<string>();
-            
             foreach (var field in _fields)
             {
                 _variableDropDown.choices.Add(field.Name);
@@ -126,6 +126,8 @@ namespace Editor
             _selectedComponent = _objectToAnalyze.GetComponent(_componentDropDown.value);
             _isVariableSelected = true;
             _isFieldSelected = false;
+            
+            ClearData(DataHandling.ClearDataModes.VariableChange);
             
             if (_fields.Any(field => field.Name == _fields[_variableDropDown.index].Name))
             {
@@ -172,6 +174,7 @@ namespace Editor
         {
             if (_objectToAnalyze == null)
             {
+                
                 return;
             }
             
@@ -216,11 +219,41 @@ namespace Editor
             Repaint();
         }
 
-        private void ClearData()
+        private void ClearData(DataHandling.ClearDataModes mode)
         {
-            _valuesToPlot = new List<List<float>>();
-            _variableDropDown.choices = new List<string>();
-            _componentDropDown.choices = new List<string>();
+            Debugging.Print("ClearData() called with mode", mode.ToString());
+            switch (mode)
+            {
+                case DataHandling.ClearDataModes.Complete:
+                    _valuesToPlot = new List<List<float>>();
+                    _componentDropDown.choices = new List<string>();
+                    _variableDropDown.choices = new List<string>();
+                    _objectToAnalyze = null;
+                    _isVariableSelected = false;
+                    _isVector = false;
+                    _isFieldSelected = false;
+                    break;
+                case DataHandling.ClearDataModes.Initialize:
+                    _valuesToPlot = new List<List<float>>();
+                    _componentDropDown.choices = new List<string>();
+                    _variableDropDown.choices = new List<string>();
+                    _isVariableSelected = false;
+                    _isVector = false;
+                    _isFieldSelected = false;
+                    break;
+                case DataHandling.ClearDataModes.ComponentChange:
+                    _valuesToPlot = new List<List<float>>();
+                    _variableDropDown.choices = new List<string>();
+                    _isVariableSelected = false;
+                    _isVector = false;
+                    _isFieldSelected = false;
+                    break;
+                case DataHandling.ClearDataModes.VariableChange:
+                    _valuesToPlot = new List<List<float>>();
+                    _isVector = false;
+                    _isFieldSelected = false;
+                    break;
+            }
         }
 
         public void CreateGUI()
@@ -260,7 +293,7 @@ namespace Editor
 
             _rightPane.Add(glContent);
             
-            ClearData();
+            ClearData(DataHandling.ClearDataModes.Initialize);
         }
     }
 }

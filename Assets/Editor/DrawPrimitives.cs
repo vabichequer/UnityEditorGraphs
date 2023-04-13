@@ -34,8 +34,8 @@ namespace Editor
         {
             for(var i = 1; i < points.Count; i++)
             {
-                var start = new Vector3(i - 1, points[i - 1], 0);
-                var end = new Vector3(i, points[i], 0);
+                var start = new Vector3(width - (i - 1), points[i - 1], 0);
+                var end = new Vector3(width - i, points[i], 0);
                 
                 DrawLine(start, end,  color);
             }
