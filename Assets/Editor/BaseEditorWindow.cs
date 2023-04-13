@@ -28,6 +28,7 @@ namespace Editor
         private PropertyInfo _selectedProperty;
         private object _selectedComponent;
         private bool _isFieldSelected, _isVariableSelected, _isVector;
+        private int _variableLength;
 
         // Graph references
         private List<List<float>> _valuesToPlot;
@@ -133,6 +134,7 @@ namespace Editor
             {
                 _selectedField = _fields[_variableDropDown.index];
                 (_, _isVector) = Numeric.Is(_selectedField.FieldType);
+                _variableLength = Numeric.Length(_selectedField.FieldType);
                 _isFieldSelected = true;
                 return;
             }
@@ -141,6 +143,7 @@ namespace Editor
 
             _selectedProperty = _properties[_variableDropDown.index];
             (_, _isVector) = Numeric.Is(_selectedProperty.PropertyType);
+            _variableLength = Numeric.Length(_selectedProperty.PropertyType);
         }
 
         private void HandleDrawing()
@@ -162,7 +165,7 @@ namespace Editor
                     return;
                 }
                 
-                for (var i = 0; i < _valuesToPlot[0].Count; i++)
+                for (var i = 0; i < _variableLength; i++)
                 {
                     DrawLineArray(_valuesToPlot.Select(list => list[i]).ToList(), _availableColors[i]);
                 }
@@ -226,32 +229,52 @@ namespace Editor
             {
                 case DataHandling.ClearDataModes.Complete:
                     _valuesToPlot = new List<List<float>>();
+                    for (var i = 0; i < width; i++)
+                    {
+                        _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
+                    }
                     _componentDropDown.choices = new List<string>();
                     _variableDropDown.choices = new List<string>();
                     _objectToAnalyze = null;
                     _isVariableSelected = false;
                     _isVector = false;
                     _isFieldSelected = false;
+                    _variableLength = 0;
                     break;
                 case DataHandling.ClearDataModes.Initialize:
                     _valuesToPlot = new List<List<float>>();
+                    for (var i = 0; i < width; i++)
+                    {
+                        _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
+                    }
                     _componentDropDown.choices = new List<string>();
                     _variableDropDown.choices = new List<string>();
                     _isVariableSelected = false;
                     _isVector = false;
                     _isFieldSelected = false;
+                    _variableLength = 0;
                     break;
                 case DataHandling.ClearDataModes.ComponentChange:
                     _valuesToPlot = new List<List<float>>();
+                    for (var i = 0; i < width; i++)
+                    {
+                        _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
+                    }
                     _variableDropDown.choices = new List<string>();
                     _isVariableSelected = false;
                     _isVector = false;
                     _isFieldSelected = false;
+                    _variableLength = 0;
                     break;
                 case DataHandling.ClearDataModes.VariableChange:
                     _valuesToPlot = new List<List<float>>();
+                    for (var i = 0; i < width; i++)
+                    {
+                        _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
+                    }
                     _isVector = false;
                     _isFieldSelected = false;
+                    _variableLength = 0;
                     break;
             }
         }

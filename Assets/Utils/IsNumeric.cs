@@ -41,8 +41,6 @@ namespace Utils
         {
             if (obj == null) return -1;
 
-            if (PossibleTypes.Any(t => obj == t)) return 1;
-
             foreach (var it in VectorTypes.Select((type, idx) => new { type, idx }))
             {
                 if (it.type == obj)
@@ -51,7 +49,7 @@ namespace Utils
                 }
             }
 
-            return -1;
+            return 1;
         }
 
         public static List<float> GetVector(object type, object obj)
