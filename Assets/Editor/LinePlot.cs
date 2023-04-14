@@ -37,11 +37,11 @@ namespace Editor
             Color.green, Color.blue, Color.red, Color.yellow
         };
 
-        [MenuItem("Window/Graphs/Base window")]
+        [MenuItem("Window/Graphs/Line Plot")]
         public static void ShowWindow()
         {
             BaseEditorWindow wnd = GetWindow<BaseEditorWindow>();
-            wnd.titleContent = new GUIContent("Base window");
+            wnd.titleContent = new GUIContent("Line Plot");
         }
 
         private void OnObjectChanged(ChangeEvent<Object> evt)
@@ -152,7 +152,8 @@ namespace Editor
             {
                 InitializePlot(_leftPane.resolvedStyle.width);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
-
+                DrawAxes();
+                
                 if (!_isVariableSelected)
                 {
                     FinalizePlot();
@@ -169,6 +170,7 @@ namespace Editor
                 {
                     DrawLineArray(_valuesToPlot.Select(list => list[i]).ToList(), _availableColors[i]);
                 }
+                
                 FinalizePlot();
             }
         }
@@ -317,6 +319,7 @@ namespace Editor
             _rightPane.Add(glContent);
             
             ClearData(DataHandling.ClearDataModes.Initialize);
+            InitialPlotState();
         }
     }
 }
