@@ -57,14 +57,20 @@ namespace Editor
             // y
             DrawLine(new Vector3(_xMargin, 0), new Vector3(_xMargin, height), Color.green);
 
-            for (var x = _xMargin; x < width - _xMargin; x +=_xIncrements)
+            var acc = 0;
+            
+            for (var x = _xIncrements; x < width - _xMargin; x +=_xIncrements)
             {
-                DrawNumber(x, height/2 + 10, 10, 10, Color.white);
+                Debugging.Print("x:", x);
+                DrawNumber(x, height/2 + 10, 10, acc, Color.white);
+                acc++;
             }
             
-            for (var y = _yMargin; y < height - _yMargin; y += _yIncrements)
+            for (var y = _yIncrements; y < height - _yMargin; y += _yIncrements)
             {
-                DrawNumber(_xMargin + 5, y, 10, 10, Color.white);
+                Debugging.Print("y:", y);
+                DrawNumber(_xMargin - 15, y, 10, acc, Color.white);
+                acc++;
             }
         }
         
@@ -146,22 +152,26 @@ namespace Editor
                     GL.Vertex(new Vector3(posX, posY));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
                     GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
                     GL.End();
                     break;
                 case 4:
                     GL.Begin(GL.LINES);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX, posY));
                     GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
                     GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.End();
                     break;
                 case 5:
@@ -170,15 +180,13 @@ namespace Editor
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.Vertex(new Vector3(posX, posY));
                     GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize )* 0.5f);
-                    GL.Vertex(new Vector3(posX, posY + verticalSize )* 0.5f);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize )* 0.5f);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize )* 0.5f);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
                     GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX, posY + verticalSize));
                     GL.End();
                     break;
                 case 6:
@@ -191,7 +199,7 @@ namespace Editor
                     GL.Vertex(new Vector3(posX, posY + verticalSize));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.Vertex(new Vector3(posX, posY));
                     GL.Vertex(new Vector3(posX, posY));
@@ -227,8 +235,10 @@ namespace Editor
                     GL.Color(color);
                     GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
                     GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
                     GL.Vertex(new Vector3(posX, posY));
+                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
                     GL.Vertex(new Vector3(posX, posY));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
                     GL.Vertex(new Vector3(posX + horizontalSize, posY));
