@@ -138,8 +138,6 @@ namespace Editor
                 _isFieldSelected = true;
                 return;
             }
-            
-            Debugging.Print("e ai:", _isVariableSelected);
 
             _selectedProperty = _properties[_variableDropDown.index];
             (_, _isVector) = Numeric.Is(_selectedProperty.PropertyType);
@@ -150,7 +148,8 @@ namespace Editor
         {
             if (Event.current.type is EventType.Repaint)
             {
-                InitializePlot(_leftPane.resolvedStyle.width);
+                Debugging.Print(_leftPane.resolvedStyle.width, _leftPane.contentRect.width);
+                InitializePlot(new Vector2(_leftPane.contentRect.width, 0), _leftPane.contentRect.height);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
                 DrawAxes();
                 

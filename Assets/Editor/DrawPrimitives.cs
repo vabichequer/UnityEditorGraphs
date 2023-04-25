@@ -17,6 +17,7 @@ namespace Editor
         private Shader _shader;
         private float _xMargin, _yMargin, _max, _min, _xIncrements, _yIncrements;
         private int _divisions;
+        private Vector2 _offset;
         
         public float height, width;
 
@@ -27,12 +28,14 @@ namespace Editor
             _divisions = 12;
         }
 
-        protected void InitializePlot(float usedWidth = 0, float usedHeight = 0)
+        protected void InitializePlot(Vector2 offset = default, float usedHeight = 0)
         {
-            width = position.width - usedWidth;
-            height = position.height;
+            width = position.width;
+            height = usedHeight;
             _xIncrements = (width - _xMargin * 2) / _divisions;
             _yIncrements = (height - _yMargin * 2) / _divisions;
+
+            _offset = offset;
             
             _xMargin = 0.05f * width;
             _yMargin = 0.05f * height;
@@ -43,32 +46,37 @@ namespace Editor
             {
                 hideFlags = HideFlags.HideAndDontSave
             };
-
+            
             _mat.SetPass(0);
             GL.PushMatrix();
 
+            var proj = Matrix4x4.Ortho(0, width, -height / 2, height / 2, -1, 1);
+            GL.LoadProjectionMatrix(proj);
         }
 
+        private Vector2 Coord(Vector2 c)
+        {
+            return new Vector2(c.x + _offset.x, c.y + _offset.y - 21);
+        }
+        
         public void DrawAxes()
         {
             // x
-            DrawLine(new Vector3(0, height / 2), new Vector3(width, height / 2), Color.red);
+            DrawLine(new Vector3(0, 0), new Vector3(width, 0), Color.red);
             
             // y
-            DrawLine(new Vector3(_xMargin, 0), new Vector3(_xMargin, height), Color.green);
+            DrawLine(new Vector3(_xMargin, height / 2), new Vector3(_xMargin, -height / 2), Color.green);
 
             var acc = 0;
             
             for (var x = _xIncrements; x < width - _xMargin; x +=_xIncrements)
             {
-                Debugging.Print("x:", x);
-                DrawNumber(x, height/2 + 10, 10, acc, Color.white);
+                DrawNumber(x, 10, 10, acc, Color.white);
                 acc++;
             }
             
-            for (var y = _yIncrements; y < height - _yMargin; y += _yIncrements)
+            for (var y = _yIncrements; y < height / 2 - _yMargin; y += _yIncrements)
             {
-                Debugging.Print("y:", y);
                 DrawNumber(_xMargin - 15, y, 10, acc, Color.white);
                 acc++;
             }
@@ -80,7 +88,6 @@ namespace Editor
             
             foreach (var it in str.Select((digit, index) => new {digit, index}))
             {
-                Debugging.Print("Draw number:", it.digit);
                 var num = 0;
                 switch (it.digit)
                 {
@@ -99,166 +106,140 @@ namespace Editor
             }
         }
         
-        private void DrawDigit(float x, float y, float size, int number, Color color) 
+        private void DrawDigit(float x, float y, float size, int number, Color color)
         {
+            var c = Coord(new Vector2(x, y));
+            
             var horizontalSize = size * 0.6f;
             var verticalSize = size;
 
-            var posX = x - horizontalSize * 0.5f;
-            var posY = y - verticalSize * 0.5f;
+            var posX = c.x - horizontalSize / 2;
+            var posY = c.y - verticalSize / 2;
+            var ll = new Vector2(posX, posY);
+            var lr = new Vector2(posX + horizontalSize, posY);
+            var ml = new Vector2(posX, posY + verticalSize / 2);
+            var mr = new Vector2(posX + horizontalSize, posY + verticalSize / 2);
+            var hl = new Vector2(posX, posY + verticalSize);
+            var hr = new Vector2(posX + horizontalSize, posY + verticalSize);
+            
 
             switch (number)
             {
                 case 0:
-                    Debugging.Print("pingou no 0");
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY));
+                    GL.Vertex(ll);
+                    GL.Vertex(lr);
+                    GL.Vertex(hr);
+                    GL.Vertex(hl);
+                    GL.Vertex(ll);
                     GL.End();
                     break;
                 case 1:
-                    Debugging.Print("pingou no 1");
                     GL.Begin(GL.LINES);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX + horizontalSize * 0.5f, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize * 0.5f, posY + verticalSize));
+                    GL.Vertex(new Vector3(posX + horizontalSize / 2, posY));
+                    GL.Vertex(new Vector3(posX + horizontalSize / 2, posY + verticalSize));
                     GL.End();
                     break;
                 case 2:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
+                    GL.Vertex(hl);
+                    GL.Vertex(hr);
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
+                    GL.Vertex(ll);
+                    GL.Vertex(lr);
                     GL.End();
                     break;
                 case 3:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
+                    GL.Vertex(hl);
+                    GL.Vertex(hr);
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
+                    GL.Vertex(mr);
+                    GL.Vertex(lr);
+                    GL.Vertex(ll);
                     GL.End();
                     break;
                 case 4:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
+                    GL.Vertex(lr);
+                    GL.Vertex(hr);
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
+                    GL.Vertex(hl);
                     GL.End();
                     break;
                 case 5:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
+                    GL.Vertex(hr);
+                    GL.Vertex(hl);
+                    GL.Vertex(ml);
+                    GL.Vertex(mr);
+                    GL.Vertex(lr);
+                    GL.Vertex(ll);
                     GL.End();
                     break;
                 case 6:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(hr);
+                    GL.Vertex(hl);
+                    GL.Vertex(ll);
+                    GL.Vertex(lr);
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
                     GL.End();
                     break;
                 case 7:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize * 0.5f, posY + verticalSize));
+                    GL.Vertex(hl);
+                    GL.Vertex(hr);
+                    GL.Vertex(new Vector3(posX + horizontalSize * 0.5f, posY));
                     GL.End();
                     break;
                 case 8:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
+                    GL.Vertex(hl);
+                    GL.Vertex(hr);
+                    GL.Vertex(lr);
+                    GL.Vertex(ll);
+                    GL.Vertex(ml);
                     GL.End();
                     break;
                 case 9:
-                    GL.Begin(GL.LINES);
+                    GL.Begin(GL.LINE_STRIP);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
+                    GL.Vertex(ll);
+                    GL.Vertex(lr);
+                    GL.Vertex(hr);
+                    GL.Vertex(hl);
+                    GL.Vertex(ml);
+                    GL.Vertex(mr);
                     GL.End();
                     break;
                 case 10: // draw a point
                     GL.Begin(GL.LINES);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY));
-                    GL.Vertex(new Vector3(posX, posY));
+                    GL.Vertex(ll);
+                    GL.Vertex(ll);
                     GL.End();
                     break;
                 case 11: // draw a hyphen
                     GL.Begin(GL.LINES);
                     GL.Color(color);
-                    GL.Vertex(new Vector3(posX, posY + verticalSize * 0.5f));
-                    GL.Vertex(new Vector3(posX + horizontalSize, posY + verticalSize * 0.5f));
+                    GL.Vertex(mr);
+                    GL.Vertex(ml);
                     GL.End();
                     break;
             }
@@ -290,6 +271,9 @@ namespace Editor
         
         public void DrawLine(Vector3 start, Vector3 end, Color color)
         {
+            start = Coord(start);
+            end = Coord(end);
+            
             GL.Begin(GL.LINES);
             GL.Color(color);
             GL.Vertex(start);
@@ -299,6 +283,9 @@ namespace Editor
 
         public void DrawSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
+            lowLeft = Coord(lowLeft);
+            highRight = Coord(highRight);
+            
             var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
             var lowRight = new Vector3(highRight.x, lowLeft.y, 0);
 
@@ -313,6 +300,9 @@ namespace Editor
 
         public void DrawHollowSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
+            lowLeft = Coord(lowLeft);
+            highRight = Coord(highRight);
+            
             var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
             var lowRight = new Vector3(highRight.x, lowLeft.y, 0);
 
@@ -328,24 +318,24 @@ namespace Editor
 
         protected void DrawBackground(BackgroundConfig.BackgroundTypes bgType, Color color, int spacing=0)
         {
-            DrawSquare(new Vector3(0, height, 0), new Vector3(width, 0, 0), color);
+            DrawSquare(new Vector3(0, -height / 2, 0), new Vector3(width, height / 2, 0), color);
             switch (bgType)
             {
                 case BackgroundConfig.BackgroundTypes.SOLID_COLOR:
                     break;
                 case BackgroundConfig.BackgroundTypes.CHECKERED:
-                    var start = new Vector3(0, 0, 0);
-                    var end = new Vector3(width, 0, 0);
+                    var start = new Vector3(0, height / 2, 0);
+                    var end = new Vector3(width, height / 2, 0);
                     
-                    for (var i = 0; i < height; i++)
+                    for (var i = -height; i < height; i++)
                     {
                         DrawLine(start, end, Color.gray);
-                        start.y += spacing;
-                        end.y += spacing;
+                        start.y -= spacing;
+                        end.y -= spacing;
                     }
 
-                    start = new Vector3(0, 0, 0);
-                    end = new Vector3(0, height, 0);
+                    start = new Vector3(0, height / 2, 0);
+                    end = new Vector3(0, -height / 2, 0);
                     
                     for (var i = 0; i < width; i++)
                     {
