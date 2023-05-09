@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/LinePlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/LinePlot.cs" afterDir="false" />
-    </list>
+    <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -117,7 +113,7 @@
       <workItem from="1681488153067" duration="5178000" />
       <workItem from="1681895883546" duration="2750000" />
       <workItem from="1682273689995" duration="1514000" />
-      <workItem from="1682351022652" duration="7104000" />
+      <workItem from="1682351022652" duration="7981000" />
     </task>
     <servers />
   </component>

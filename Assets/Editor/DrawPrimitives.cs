@@ -30,7 +30,7 @@ namespace Editor
 
         protected void InitializePlot(Vector2 offset = default, float usedHeight = 0)
         {
-            width = position.width;
+            width = position.width - offset.x;
             height = usedHeight;
             _xIncrements = (width - _xMargin * 2) / _divisions;
             _yIncrements = (height - _yMargin * 2) / _divisions;
@@ -50,13 +50,13 @@ namespace Editor
             _mat.SetPass(0);
             GL.PushMatrix();
 
-            var proj = Matrix4x4.Ortho(0, width, -height / 2, height / 2, -1, 1);
+            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2, -1, 1);
             GL.LoadProjectionMatrix(proj);
         }
 
         private Vector2 Coord(Vector2 c)
         {
-            return new Vector2(c.x + _offset.x, c.y + _offset.y - 21);
+            return new Vector2(c.x, c.y - 21);
         }
         
         public void DrawAxes()
