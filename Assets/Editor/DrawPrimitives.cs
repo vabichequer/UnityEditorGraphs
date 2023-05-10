@@ -15,25 +15,31 @@ namespace Editor
         
         private Material _mat;
         private Shader _shader;
-        private float _xMargin, _yMargin, _max, _min, _xIncrements, _yIncrements;
-        private int _divisions;
+        private float _xMargin, _yMargin, _yMax, _yMin, _xIncrements, _yIncrements;
+        private readonly int _topOffset = 21;
         private Vector2 _offset;
         
         public float height, width;
 
         protected void InitialPlotState()
         {
-            _max = float.MinValue;
-            _min = float.MaxValue;
-            _divisions = 12;
+            _yMax = float.MinValue;
+            _yMin = float.MaxValue;
         }
 
         protected void InitializePlot(Vector2 offset = default, float usedHeight = 0)
         {
             width = position.width - offset.x;
             height = usedHeight;
-            _xIncrements = (width - _xMargin * 2) / _divisions;
-            _yIncrements = (height - _yMargin * 2) / _divisions;
+
+            if (_yMax > float.MinValue)
+            {
+                _yIncrements = (height - _yMargin * 2) / (_yMax * 2);
+            }
+            else
+            {
+                _yIncrements = (height - _yMargin * 2) / 12;
+            }
 
             _offset = offset;
             
@@ -50,13 +56,23 @@ namespace Editor
             _mat.SetPass(0);
             GL.PushMatrix();
 
-            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2, -1, 1);
+            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2 - _topOffset, -1, 1);
             GL.LoadProjectionMatrix(proj);
         }
 
-        private Vector2 Coord(Vector2 c)
+        private Vector2 UnscaledCoords(Vector2 c)
         {
-            return new Vector2(c.x, c.y - 21);
+            if (c.y > height / 2 - _topOffset)
+            {
+                return new Vector2(c.x, height/2 - 2 * _topOffset);
+            }
+
+            return new Vector2(c.x, c.y - _topOffset);
+        }
+        
+        public Vector2 ScaledCoords(Vector2 c)
+        {
+            return new Vector2(c.x, c.y * _yIncrements);
         }
         
         public void DrawAxes()
@@ -67,17 +83,18 @@ namespace Editor
             // y
             DrawLine(new Vector3(_xMargin, height / 2), new Vector3(_xMargin, -height / 2), Color.green);
 
-            var acc = 0;
-            
+            /*
             for (var x = _xIncrements; x < width - _xMargin; x +=_xIncrements)
             {
                 DrawNumber(x, 10, 10, acc, Color.white);
-                acc++;
             }
+            */
             
-            for (var y = _yIncrements; y < height / 2 - _yMargin; y += _yIncrements)
+            var acc = 0;
+            for (var y = _yIncrements; y < height / 2 - _yMargin - _topOffset; y += _yIncrements)
             {
                 DrawNumber(_xMargin - 15, y, 10, acc, Color.white);
+                DrawNumber(_xMargin - 15, -y, 10, -acc, Color.white);
                 acc++;
             }
         }
@@ -108,7 +125,7 @@ namespace Editor
         
         private void DrawDigit(float x, float y, float size, int number, Color color)
         {
-            var c = Coord(new Vector2(x, y));
+            var c = UnscaledCoords(new Vector2(x, y));
             
             var horizontalSize = size * 0.6f;
             var verticalSize = size;
@@ -245,25 +262,24 @@ namespace Editor
             }
         }
 
-
         public void DrawLineArray(List<float> points, Color color)
         {
             var tempMin = points.Min();
-            if (_min > tempMin)
+            if (_yMin > tempMin)
             {
-                _min = tempMin;
+                _yMin = tempMin;
             }
 
             var tempMax = points.Max();
-            if (_max < tempMax)
+            if (_yMax < tempMax)
             {
-                _max = tempMax;
+                _yMax = tempMax;
             }
             
             for(var i = 1; i < points.Count; i++)
             {
-                var start = new Vector3( (i - 1), height / 2 - points[i - 1], 0);
-                var end = new Vector3(i, height / 2 - points[i], 0);
+                var start = ScaledCoords(new Vector3( (i - 1),   points[i - 1], 0));
+                var end = ScaledCoords(new Vector3(i, points[i], 0));
                 
                 DrawLine(start, end,  color);
             }
@@ -271,8 +287,8 @@ namespace Editor
         
         public void DrawLine(Vector3 start, Vector3 end, Color color)
         {
-            start = Coord(start);
-            end = Coord(end);
+            start = UnscaledCoords(start);
+            end = UnscaledCoords(end);
             
             GL.Begin(GL.LINES);
             GL.Color(color);
@@ -283,8 +299,8 @@ namespace Editor
 
         public void DrawSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
-            lowLeft = Coord(lowLeft);
-            highRight = Coord(highRight);
+            lowLeft = UnscaledCoords(lowLeft);
+            highRight = UnscaledCoords(highRight);
             
             var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
             var lowRight = new Vector3(highRight.x, lowLeft.y, 0);
@@ -300,8 +316,8 @@ namespace Editor
 
         public void DrawHollowSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
-            lowLeft = Coord(lowLeft);
-            highRight = Coord(highRight);
+            lowLeft = UnscaledCoords(lowLeft);
+            highRight = UnscaledCoords(highRight);
             
             var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
             var lowRight = new Vector3(highRight.x, lowLeft.y, 0);

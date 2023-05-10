@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="" />
+    <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Editor/LinePlot.cs" root0="FORCE_HIGHLIGHTING" />
@@ -32,6 +38,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.5008183&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;features/line__plot&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -82,10 +89,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="47537">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="47537" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -114,6 +121,8 @@
       <workItem from="1681895883546" duration="2750000" />
       <workItem from="1682273689995" duration="1514000" />
       <workItem from="1682351022652" duration="7981000" />
+      <workItem from="1683644697762" duration="5153000" />
+      <workItem from="1683731364341" duration="3843000" />
     </task>
     <servers />
   </component>
@@ -136,5 +145,37 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs</url>
+          <line>95</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" initialLine="89" containingFunctionPresentation="Method 'DrawAxes'">
+            <startOffsets>
+              <option value="2698" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2749" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs</url>
+          <line>36</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" initialLine="36" containingFunctionPresentation="Method 'InitializePlot'">
+            <startOffsets>
+              <option value="921" />
+            </startOffsets>
+            <endOffsets>
+              <option value="974" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
