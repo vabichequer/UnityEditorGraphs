@@ -37,11 +37,11 @@ namespace Editor
             Color.green, Color.blue, Color.red, Color.yellow
         };
 
-        [MenuItem("Window/Graphs/Base window")]
+        [MenuItem("Window/Graphs/Line Plot")]
         public static void ShowWindow()
         {
             BaseEditorWindow wnd = GetWindow<BaseEditorWindow>();
-            wnd.titleContent = new GUIContent("Base window");
+            wnd.titleContent = new GUIContent("Line Plot");
         }
 
         private void OnObjectChanged(ChangeEvent<Object> evt)
@@ -138,8 +138,6 @@ namespace Editor
                 _isFieldSelected = true;
                 return;
             }
-            
-            Debugging.Print("e ai:", _isVariableSelected);
 
             _selectedProperty = _properties[_variableDropDown.index];
             (_, _isVector) = Numeric.Is(_selectedProperty.PropertyType);
@@ -150,9 +148,10 @@ namespace Editor
         {
             if (Event.current.type is EventType.Repaint)
             {
-                InitializePlot(_leftPane.resolvedStyle.width);
+                InitializePlot(new Vector2(_leftPane.contentRect.width, 0), _leftPane.contentRect.height);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
-
+                DrawAxes();
+                
                 if (!_isVariableSelected)
                 {
                     FinalizePlot();
@@ -169,6 +168,7 @@ namespace Editor
                 {
                     DrawLineArray(_valuesToPlot.Select(list => list[i]).ToList(), _availableColors[i]);
                 }
+                
                 FinalizePlot();
             }
         }
@@ -224,7 +224,6 @@ namespace Editor
 
         private void ClearData(DataHandling.ClearDataModes mode)
         {
-            Debugging.Print("ClearData() called with mode", mode.ToString());
             switch (mode)
             {
                 case DataHandling.ClearDataModes.Complete:
@@ -317,6 +316,7 @@ namespace Editor
             _rightPane.Add(glContent);
             
             ClearData(DataHandling.ClearDataModes.Initialize);
+            InitialPlotState();
         }
     }
 }

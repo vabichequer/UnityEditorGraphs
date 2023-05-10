@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="3768e551-ba71-4fb2-a9ba-9635dfc5fc36" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Enums/DataHandling.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Enums/DataHandling.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.graphs/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Editor/LinePlot.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -34,13 +38,18 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.5008183&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;features/line__plot&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/user/Library/Application Support/JetBrains/Rider2022.3/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/user/Library/Application Support/JetBrains/Rider2022.3/resharper-host/SourcesCache&quot;,
+      &quot;/Users/user/Library/Application Support/JetBrains/Rider2023.1/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/user/Library/Application Support/JetBrains/Rider2023.1/resharper-host/SourcesCache&quot;,
       &quot;/Users/user/.local/share/Symbols/src&quot;
     ]
   }
@@ -49,6 +58,14 @@
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/2022.2.3f1/Unity.app/Contents/MacOS/Unity" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath $PROJECT_DIR$ -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/2022.2.3f1/Unity.app/Contents/MacOS/Unity" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath $PROJECT_DIR$ -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -72,10 +89,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="11585">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="47537">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="11585" />
+      <option name="pid" value="47537" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -98,7 +115,14 @@
       <workItem from="1680765201908" duration="12009000" />
       <workItem from="1680788739103" duration="20213000" />
       <workItem from="1681235510337" duration="1394000" />
-      <workItem from="1681368319903" duration="2142000" />
+      <workItem from="1681368319903" duration="8946000" />
+      <workItem from="1681475171323" duration="37000" />
+      <workItem from="1681488153067" duration="5178000" />
+      <workItem from="1681895883546" duration="2750000" />
+      <workItem from="1682273689995" duration="1514000" />
+      <workItem from="1682351022652" duration="7981000" />
+      <workItem from="1683644697762" duration="5153000" />
+      <workItem from="1683731364341" duration="3843000" />
     </task>
     <servers />
   </component>
@@ -126,17 +150,30 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs</url>
-          <line>103</line>
-          <properties documentPath="$PROJECT_DIR$/Assets/Editor/BaseEditorWindow.cs" initialLine="103" containingFunctionPresentation="method 'OnComponentDropDownSelection'">
+          <url>file://$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs</url>
+          <line>95</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" initialLine="89" containingFunctionPresentation="Method 'DrawAxes'">
             <startOffsets>
-              <option value="3637" />
+              <option value="2698" />
             </startOffsets>
             <endOffsets>
-              <option value="3753" />
+              <option value="2749" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs</url>
+          <line>36</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Editor/DrawPrimitives.cs" initialLine="36" containingFunctionPresentation="Method 'InitializePlot'">
+            <startOffsets>
+              <option value="921" />
+            </startOffsets>
+            <endOffsets>
+              <option value="974" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
