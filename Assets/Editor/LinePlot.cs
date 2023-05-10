@@ -148,7 +148,6 @@ namespace Editor
         {
             if (Event.current.type is EventType.Repaint)
             {
-                Debugging.Print(_leftPane.resolvedStyle.width, _leftPane.contentRect.width);
                 InitializePlot(new Vector2(_leftPane.contentRect.width, 0), _leftPane.contentRect.height);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
                 DrawAxes();
@@ -225,7 +224,6 @@ namespace Editor
 
         private void ClearData(DataHandling.ClearDataModes mode)
         {
-            Debugging.Print("ClearData() called with mode", mode.ToString());
             switch (mode)
             {
                 case DataHandling.ClearDataModes.Complete:

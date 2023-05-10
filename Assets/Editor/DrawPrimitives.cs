@@ -98,7 +98,7 @@ namespace Editor
                 acc++;
             }
         }
-        
+
         public void DrawNumber(float x, float y, float size, float number, Color color)
         {
             var str = number.ToString(CultureInfo.InvariantCulture);
