@@ -34,9 +34,10 @@ namespace Editor
         private List<List<float>> _valuesToPlot;
         private readonly List<Color> _availableColors = new List<Color>
         {
-            Color.green, Color.blue, Color.red, Color.yellow
+            Color.red, Color.green, Color.blue, Color.yellow
         };
-
+        private List<string> _variableNames, _vectorNames = new List<string>{"X", "Y", "Z", "W"};
+        
         [MenuItem("Window/Graphs/Line Plot")]
         public static void ShowWindow()
         {
@@ -151,12 +152,7 @@ namespace Editor
                 InitializePlot(new Vector2(_leftPane.contentRect.width, 0), _leftPane.contentRect.height);
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
                 DrawAxes();
-                
-                List<string> names = new List<string>{"X", "Y", "Z"};
-                List<Color> colors = new List<Color> { Color.red, Color.green, Color.blue };
 
-                DrawLegend(names, colors);
-                
                 if (!_isVariableSelected)
                 {
                     FinalizePlot();
@@ -173,6 +169,8 @@ namespace Editor
                 {
                     DrawLineArray(_valuesToPlot.Select(list => list[i]).ToList(), _availableColors[i]);
                 }
+                
+                DrawLegend(_variableNames, _availableColors);
                 
                 FinalizePlot();
             }
@@ -201,11 +199,18 @@ namespace Editor
                 var field = _selectedField.GetValue(_selectedComponent);
                 if (_isVector)
                 {
-                    _valuesToPlot.Add(Numeric.GetVector(_selectedField.FieldType, field));
+                    var vector = Numeric.GetVector(_selectedField.FieldType, field);
+                    _valuesToPlot.Add(vector);
+                    _variableNames = new List<string>();
+                    for (var i = 0; i < vector.Count; i++)
+                    {
+                        _variableNames.Add(_vectorNames[i]);
+                    }
                 }
                 else
                 {
                     _valuesToPlot.Add(new List<float>(){(float) field});
+                    _variableNames = new List<string>{ _selectedField.Name };
                 }
                 return;
             }
@@ -213,11 +218,18 @@ namespace Editor
             var property = _selectedProperty.GetValue(_selectedComponent);
             if (_isVector)
             {
-                _valuesToPlot.Add(Numeric.GetVector(_selectedProperty.PropertyType, property));
+                var vector = Numeric.GetVector(_selectedProperty.PropertyType, property);
+                _valuesToPlot.Add(vector);
+                _variableNames = new List<string>();
+                for (var i = 0; i < vector.Count; i++)
+                {
+                    _variableNames.Add(_vectorNames[i]);
+                }
             }
             else
             {
                 _valuesToPlot.Add(new List<float>(){(float) property});
+                _variableNames = new List<string> { _selectedProperty.Name };
             }
         }
         
@@ -233,6 +245,7 @@ namespace Editor
             {
                 case DataHandling.ClearDataModes.Complete:
                     _valuesToPlot = new List<List<float>>();
+                    _variableNames = new List<string>();
                     for (var i = 0; i < width; i++)
                     {
                         _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
@@ -247,6 +260,7 @@ namespace Editor
                     break;
                 case DataHandling.ClearDataModes.Initialize:
                     _valuesToPlot = new List<List<float>>();
+                    _variableNames = new List<string>();
                     for (var i = 0; i < width; i++)
                     {
                         _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
@@ -260,6 +274,7 @@ namespace Editor
                     break;
                 case DataHandling.ClearDataModes.ComponentChange:
                     _valuesToPlot = new List<List<float>>();
+                    _variableNames = new List<string>();
                     for (var i = 0; i < width; i++)
                     {
                         _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});
@@ -272,6 +287,7 @@ namespace Editor
                     break;
                 case DataHandling.ClearDataModes.VariableChange:
                     _valuesToPlot = new List<List<float>>();
+                    _variableNames = new List<string>();
                     for (var i = 0; i < width; i++)
                     {
                         _valuesToPlot.Add(new List<float>(){0, 0, 0, 0});

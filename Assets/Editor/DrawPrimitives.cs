@@ -36,14 +36,7 @@ namespace Editor
             width = position.width - offset.x;
             height = usedHeight;
 
-            if (_yMax > float.MinValue)
-            {
-                _yIncrements = (height - _yMargin * 2) / (_yMax * 2);
-            }
-            else
-            {
-                _yIncrements = (height - _yMargin * 2) / 12;
-            }
+            _yIncrements = (height - _yMargin * 2) / 12;
 
             _xMargin = 0.05f * width;
             _yMargin = 0.05f * height;
@@ -90,19 +83,19 @@ namespace Editor
             {
                 WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, y)), 10, acc, Color.white);
                 WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, -y)), 10, -acc, Color.white);
-                acc++;
+                acc += (int)Math.Ceiling(_yMax / 6f);
             }
         }
 
         public void DrawLegend(List<string> itemNames, List<Color> itemColors)
         {
-            const int itemTotalHeight = ItemSize + ItemMargin * 2;
-
+            var numberOfItems = itemNames.Count;
+            
             // Box
             var boxXl = width - (BoxSize + BoxMargin);
             var boxXh = width - BoxMargin;
-            var boxYl = height / 2 - itemTotalHeight * itemNames.Count - BoxMargin + ItemMargin * 2;
             var boxYh = height / 2 - BoxMargin;
+            var boxYl = boxYh - ItemSize * numberOfItems - ItemMargin * (numberOfItems + 1);
 
             // Item
             var itemXl = width - (BoxMargin + BoxSize) + ItemMargin;
