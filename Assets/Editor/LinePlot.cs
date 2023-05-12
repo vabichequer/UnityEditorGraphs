@@ -152,6 +152,11 @@ namespace Editor
                 DrawBackground(BackgroundConfig.BackgroundTypes.CHECKERED, Color.black, 50);
                 DrawAxes();
                 
+                List<string> names = new List<string>{"X", "Y", "Z"};
+                List<Color> colors = new List<Color> { Color.red, Color.green, Color.blue };
+
+                DrawLegend(names, colors);
+                
                 if (!_isVariableSelected)
                 {
                     FinalizePlot();

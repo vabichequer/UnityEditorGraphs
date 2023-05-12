@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using Components;
 using Enums;
 using UnityEditor;
 using UnityEngine;
-using Utils;
 
 namespace Editor
 {
@@ -16,10 +15,15 @@ namespace Editor
         private Material _mat;
         private Shader _shader;
         private float _xMargin, _yMargin, _yMax, _yMin, _xIncrements, _yIncrements;
-        private readonly int _topOffset = 21;
-        private Vector2 _offset;
+        private const int TopOffset = 21;
         
         public float height, width;
+        
+        // Legend parameters
+        private const int ItemSize = 15;
+        private const int ItemMargin = 5;
+        private const int BoxMargin = 25;
+        private const int BoxSize = 100;
 
         protected void InitialPlotState()
         {
@@ -41,8 +45,6 @@ namespace Editor
                 _yIncrements = (height - _yMargin * 2) / 12;
             }
 
-            _offset = offset;
-            
             _xMargin = 0.05f * width;
             _yMargin = 0.05f * height;
             
@@ -56,21 +58,21 @@ namespace Editor
             _mat.SetPass(0);
             GL.PushMatrix();
 
-            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2 - _topOffset, -1, 1);
+            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2 - TopOffset, -1, 1);
             GL.LoadProjectionMatrix(proj);
         }
-
+        
         private Vector2 UnscaledCoords(Vector2 c)
         {
-            if (c.y > height / 2 - _topOffset)
+            if (c.y > height / 2 - TopOffset)
             {
-                return new Vector2(c.x, height/2 - 2 * _topOffset);
+                return new Vector2(c.x, height/2 - 2 * TopOffset);
             }
 
-            return new Vector2(c.x, c.y - _topOffset);
+            return new Vector2(c.x, c.y - TopOffset);
         }
         
-        public Vector2 ScaledCoords(Vector2 c)
+        private Vector2 ScaledCoords(Vector2 c)
         {
             return new Vector2(c.x, c.y * _yIncrements);
         }
@@ -83,185 +85,52 @@ namespace Editor
             // y
             DrawLine(new Vector3(_xMargin, height / 2), new Vector3(_xMargin, -height / 2), Color.green);
 
-            /*
-            for (var x = _xIncrements; x < width - _xMargin; x +=_xIncrements)
-            {
-                DrawNumber(x, 10, 10, acc, Color.white);
-            }
-            */
-            
             var acc = 0;
-            for (var y = _yIncrements; y < height / 2 - _yMargin - _topOffset; y += _yIncrements)
+            for (var y = _yIncrements; y < height / 2 - _yMargin - TopOffset; y += _yIncrements)
             {
-                DrawNumber(_xMargin - 15, y, 10, acc, Color.white);
-                DrawNumber(_xMargin - 15, -y, 10, -acc, Color.white);
+                WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, y)), 10, acc, Color.white);
+                WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, -y)), 10, -acc, Color.white);
                 acc++;
             }
         }
 
-        public void DrawNumber(float x, float y, float size, float number, Color color)
+        public void DrawLegend(List<string> itemNames, List<Color> itemColors)
         {
-            var str = number.ToString(CultureInfo.InvariantCulture);
+            const int itemTotalHeight = ItemSize + ItemMargin * 2;
+
+            // Box
+            var boxXl = width - (BoxSize + BoxMargin);
+            var boxXh = width - BoxMargin;
+            var boxYl = height / 2 - itemTotalHeight * itemNames.Count - BoxMargin + ItemMargin * 2;
+            var boxYh = height / 2 - BoxMargin;
+
+            // Item
+            var itemXl = width - (BoxMargin + BoxSize) + ItemMargin;
+            var itemXh = itemXl + ItemSize;
             
-            foreach (var it in str.Select((digit, index) => new {digit, index}))
+            var ll = UnscaledCoords(new Vector2(boxXl, boxYl));
+            var hr = UnscaledCoords(new Vector2(boxXh, boxYh));
+            DrawHollowSquare(ll, hr, Color.white);
+
+            for (var i = 0; i < itemNames.Count; i++)
             {
-                var num = 0;
-                switch (it.digit)
-                {
-                    case '.':
-                        num = 10;
-                        break;
-                    case '-':
-                        num = 11;
-                        break;
-                    default:
-                        num = it.digit - '0';
-                        break;
-                }
+                var itemYl = boxYh - (ItemMargin + ItemSize + (ItemMargin + ItemSize) * i);
+                var itemYh = boxYh - (ItemMargin + (ItemMargin + ItemSize) * i);
                 
-                DrawDigit(x + size * it.index, y, size, num, color);
+                DrawSquare(
+                    lowLeft:UnscaledCoords(new Vector2(itemXl, itemYl)),
+                    highRight: UnscaledCoords(new Vector2(itemXh, itemYh)),
+                    color: itemColors[i]
+                    );
+                
+                WriteOnScreen.DrawWord(
+                    UnscaledCoords(new Vector2(itemXh + ItemMargin * 2, (itemYh + itemYl) / 2 - ItemSize - ItemMargin)), 
+                    10, 
+                    itemNames[i], 
+                    Color.white);
             }
         }
         
-        private void DrawDigit(float x, float y, float size, int number, Color color)
-        {
-            var c = UnscaledCoords(new Vector2(x, y));
-            
-            var horizontalSize = size * 0.6f;
-            var verticalSize = size;
-
-            var posX = c.x - horizontalSize / 2;
-            var posY = c.y - verticalSize / 2;
-            var ll = new Vector2(posX, posY);
-            var lr = new Vector2(posX + horizontalSize, posY);
-            var ml = new Vector2(posX, posY + verticalSize / 2);
-            var mr = new Vector2(posX + horizontalSize, posY + verticalSize / 2);
-            var hl = new Vector2(posX, posY + verticalSize);
-            var hr = new Vector2(posX + horizontalSize, posY + verticalSize);
-            
-
-            switch (number)
-            {
-                case 0:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(ll);
-                    GL.Vertex(lr);
-                    GL.Vertex(hr);
-                    GL.Vertex(hl);
-                    GL.Vertex(ll);
-                    GL.End();
-                    break;
-                case 1:
-                    GL.Begin(GL.LINES);
-                    GL.Color(color);
-                    GL.Vertex(new Vector3(posX + horizontalSize / 2, posY));
-                    GL.Vertex(new Vector3(posX + horizontalSize / 2, posY + verticalSize));
-                    GL.End();
-                    break;
-                case 2:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(hl);
-                    GL.Vertex(hr);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.Vertex(ll);
-                    GL.Vertex(lr);
-                    GL.End();
-                    break;
-                case 3:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(hl);
-                    GL.Vertex(hr);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.Vertex(mr);
-                    GL.Vertex(lr);
-                    GL.Vertex(ll);
-                    GL.End();
-                    break;
-                case 4:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(lr);
-                    GL.Vertex(hr);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.Vertex(hl);
-                    GL.End();
-                    break;
-                case 5:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(hr);
-                    GL.Vertex(hl);
-                    GL.Vertex(ml);
-                    GL.Vertex(mr);
-                    GL.Vertex(lr);
-                    GL.Vertex(ll);
-                    GL.End();
-                    break;
-                case 6:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(hr);
-                    GL.Vertex(hl);
-                    GL.Vertex(ll);
-                    GL.Vertex(lr);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.End();
-                    break;
-                case 7:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(hl);
-                    GL.Vertex(hr);
-                    GL.Vertex(new Vector3(posX + horizontalSize * 0.5f, posY));
-                    GL.End();
-                    break;
-                case 8:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.Vertex(hl);
-                    GL.Vertex(hr);
-                    GL.Vertex(lr);
-                    GL.Vertex(ll);
-                    GL.Vertex(ml);
-                    GL.End();
-                    break;
-                case 9:
-                    GL.Begin(GL.LINE_STRIP);
-                    GL.Color(color);
-                    GL.Vertex(ll);
-                    GL.Vertex(lr);
-                    GL.Vertex(hr);
-                    GL.Vertex(hl);
-                    GL.Vertex(ml);
-                    GL.Vertex(mr);
-                    GL.End();
-                    break;
-                case 10: // draw a point
-                    GL.Begin(GL.LINES);
-                    GL.Color(color);
-                    GL.Vertex(ll);
-                    GL.Vertex(ll);
-                    GL.End();
-                    break;
-                case 11: // draw a hyphen
-                    GL.Begin(GL.LINES);
-                    GL.Color(color);
-                    GL.Vertex(mr);
-                    GL.Vertex(ml);
-                    GL.End();
-                    break;
-            }
-        }
-
         public void DrawLineArray(List<float> points, Color color)
         {
             var tempMin = points.Min();
