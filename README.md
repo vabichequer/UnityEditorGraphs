@@ -9,7 +9,8 @@ No map! I will add things as needed/requested, but most importantly wanted.
 # Usage
 
 Simply open the graphing tool through the Window > Graphs menu. When it is opened, you can drag a GameObject into the Object To Analyze box and each of its components will be exposed through reflection. Select the property through the dropdowns and that's it.
-![Uploading image.png…]()
+
+![image](https://github.com/user-attachments/assets/893cee47-84ce-47f9-9979-2d30e73a2fa0)
 
 # Goals
 
