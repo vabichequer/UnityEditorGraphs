@@ -18,8 +18,8 @@ namespace Components
 
         private static void DrawLetter(Vector2 c, float size, char letter, Color color)
         {
-            var horizontalSize = size * 0.6f;
-            var verticalSize = size;
+            float horizontalSize = size * 0.6f;
+            float verticalSize = size;
 
             var posX = c.x - horizontalSize / 2;
             var posY = c.y - verticalSize / 2;

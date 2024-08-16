@@ -12,11 +12,14 @@ namespace Editor
     {
         public Rect rect;
         
-        private Material _mat;
-        private Shader _shader;
-        private float _xMargin, _yMargin, _yMax, _yMin, _xIncrements, _yIncrements;
-        private const int TopOffset = 21;
+        private Material mat;
+        private Shader shader;
+        private float xMargin, yMargin, xIncrements, yIncrements;
+        private int yMax, yMin;
         
+        // Viewport parameters
+        //private const int TopOffset = 21;
+        private float top, bottom;
         public float height, width;
         
         // Legend parameters
@@ -24,50 +27,44 @@ namespace Editor
         private const int ItemMargin = 5;
         private const int BoxMargin = 25;
         private const int BoxSize = 100;
+        private const float NumberOfBrackets = 6;
 
         protected void InitialPlotState()
         {
-            _yMax = float.MinValue;
-            _yMin = float.MaxValue;
+            yMax = int.MinValue;
+            yMin = int.MaxValue;
+            
+            xMargin = 0.05f * width;
+            yMargin = 0.05f * height;
         }
-
+        
         protected void InitializePlot(Vector2 offset = default, float usedHeight = 0)
         {
             width = position.width - offset.x;
             height = usedHeight;
-
-            _yIncrements = (height - _yMargin * 2) / 12;
-
-            _xMargin = 0.05f * width;
-            _yMargin = 0.05f * height;
             
-            _shader = Shader.Find("Hidden/Internal-Colored");
+            yIncrements = (height - yMargin * 2) / (Mathf.Max(yMax, yMin * -1) * 2 + 1);
             
-            _mat = new Material(_shader)
+            shader = Shader.Find("Hidden/Internal-Colored");
+            
+            mat = new Material(shader)
             {
                 hideFlags = HideFlags.HideAndDontSave
             };
             
-            _mat.SetPass(0);
+            mat.SetPass(0);
             GL.PushMatrix();
 
-            var proj = Matrix4x4.Ortho(-offset.x, width, -height / 2, height / 2 - TopOffset, -1, 1);
-            GL.LoadProjectionMatrix(proj);
-        }
-        
-        private Vector2 UnscaledCoords(Vector2 c)
-        {
-            if (c.y > height / 2 - TopOffset)
-            {
-                return new Vector2(c.x, height/2 - 2 * TopOffset);
-            }
+            top = (height + yMargin) / 2;
+            bottom = -top + yMargin / 2;
 
-            return new Vector2(c.x, c.y - TopOffset);
+            Matrix4x4 proj = Matrix4x4.Ortho(-offset.x, width, bottom, top, -1, 1);
+            GL.LoadProjectionMatrix(proj);
         }
         
         private Vector2 ScaledCoords(Vector2 c)
         {
-            return new Vector2(c.x, c.y * _yIncrements);
+            return new Vector2(c.x, c.y * yIncrements);
         }
         
         public void DrawAxes()
@@ -76,72 +73,78 @@ namespace Editor
             DrawLine(new Vector3(0, 0), new Vector3(width, 0), Color.red);
             
             // y
-            DrawLine(new Vector3(_xMargin, height / 2), new Vector3(_xMargin, -height / 2), Color.green);
+            DrawLine(new Vector3(xMargin, height / 2), new Vector3(xMargin, -height / 2), Color.green);
 
-            var acc = 0;
-            for (var y = _yIncrements; y < height / 2 - _yMargin - TopOffset; y += _yIncrements)
+            if (yMax <= 0)
             {
-                WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, y)), 10, acc, Color.white);
-                WriteOnScreen.DrawNumber(UnscaledCoords(new Vector2(_xMargin - 15, -y)), 10, -acc, Color.white);
-                acc += (int)Math.Ceiling(_yMax / 6f);
+                return;
+            }
+
+            int bracket = (int)Math.Ceiling(yMax / NumberOfBrackets);
+            
+            for (float y = 0f; y <= NumberOfBrackets; y += 1)
+            {
+                float yBracketed = bracket * y;
+                WriteOnScreen.DrawNumber(ScaledCoords(new Vector2(xMargin - 15, yBracketed)), 10, yBracketed, Color.white);
+                WriteOnScreen.DrawNumber(ScaledCoords(new Vector2(xMargin - 15, -yBracketed)), 10, -yBracketed, Color.white);
             }
         }
 
         public void DrawLegend(List<string> itemNames, List<Color> itemColors)
         {
-            var numberOfItems = itemNames.Count;
+            int numberOfItems = itemNames.Count;
             
             // Box
-            var boxXl = width - (BoxSize + BoxMargin);
-            var boxXh = width - BoxMargin;
-            var boxYh = height / 2 - BoxMargin;
-            var boxYl = boxYh - ItemSize * numberOfItems - ItemMargin * (numberOfItems + 1);
+            float boxXl = width - (BoxSize + BoxMargin);
+            float boxXh = width - BoxMargin;
+            float boxYh = height / 2 - BoxMargin;
+            float boxYl = boxYh - ItemSize * numberOfItems - ItemMargin * (numberOfItems + 1);
 
             // Item
-            var itemXl = width - (BoxMargin + BoxSize) + ItemMargin;
-            var itemXh = itemXl + ItemSize;
+            float itemXl = width - (BoxMargin + BoxSize) + ItemMargin;
+            float itemXh = itemXl + ItemSize;
             
-            var ll = UnscaledCoords(new Vector2(boxXl, boxYl));
-            var hr = UnscaledCoords(new Vector2(boxXh, boxYh));
+            Vector2 ll = new Vector2(boxXl, boxYl);
+            Vector2 hr = new Vector2(boxXh, boxYh);
             DrawHollowSquare(ll, hr, Color.white);
 
-            for (var i = 0; i < itemNames.Count; i++)
+            for (int i = 0; i < itemNames.Count; i++)
             {
-                var itemYl = boxYh - (ItemMargin + ItemSize + (ItemMargin + ItemSize) * i);
-                var itemYh = boxYh - (ItemMargin + (ItemMargin + ItemSize) * i);
+                float itemYl = boxYh - (ItemMargin + ItemSize + (ItemMargin + ItemSize) * i);
+                float itemYh = boxYh - (ItemMargin + (ItemMargin + ItemSize) * i);
                 
                 DrawSquare(
-                    lowLeft:UnscaledCoords(new Vector2(itemXl, itemYl)),
-                    highRight: UnscaledCoords(new Vector2(itemXh, itemYh)),
+                    lowLeft:new Vector2(itemXl, itemYl),
+                    highRight:new Vector2(itemXh, itemYh),
                     color: itemColors[i]
                     );
                 
                 WriteOnScreen.DrawWord(
-                    UnscaledCoords(new Vector2(itemXh + ItemMargin * 2, (itemYh + itemYl) / 2 - ItemSize - ItemMargin)), 
+                    new Vector2(itemXh + ItemMargin * 2, (itemYh + itemYl) / 2 - ItemSize - ItemMargin), 
                     10, 
                     itemNames[i], 
                     Color.white);
             }
         }
-        
-        public void DrawLineArray(List<float> points, Color color)
+
+        protected void DrawLineArray(List<float> points, Color color)
         {
-            var tempMin = points.Min();
-            if (_yMin > tempMin)
+            int tempMin = (int)points.Min();
+            if (yMin > tempMin)
             {
-                _yMin = tempMin;
+                yMin = tempMin;
             }
 
-            var tempMax = points.Max();
-            if (_yMax < tempMax)
+            int tempMax = (int)points.Max();
+            if (yMax < tempMax)
             {
-                _yMax = tempMax;
+                yMax = tempMax;
             }
             
-            for(var i = 1; i < points.Count; i++)
+            for(int i = 1; i < points.Count; i++)
             {
-                var start = ScaledCoords(new Vector3( (i - 1),   points[i - 1], 0));
-                var end = ScaledCoords(new Vector3(i, points[i], 0));
+                Vector2 start = ScaledCoords(new Vector3( (i - 1),   points[i - 1], 0));
+                Vector2 end = ScaledCoords(new Vector3(i, points[i], 0));
                 
                 DrawLine(start, end,  color);
             }
@@ -149,9 +152,6 @@ namespace Editor
         
         public void DrawLine(Vector3 start, Vector3 end, Color color)
         {
-            start = UnscaledCoords(start);
-            end = UnscaledCoords(end);
-            
             GL.Begin(GL.LINES);
             GL.Color(color);
             GL.Vertex(start);
@@ -161,11 +161,8 @@ namespace Editor
 
         public void DrawSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
-            lowLeft = UnscaledCoords(lowLeft);
-            highRight = UnscaledCoords(highRight);
-            
-            var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
-            var lowRight = new Vector3(highRight.x, lowLeft.y, 0);
+            Vector3 highLeft = new Vector3(lowLeft.x, highRight.y, 0);
+            Vector3 lowRight = new Vector3(highRight.x, lowLeft.y, 0);
 
             GL.Begin(GL.QUADS);
             GL.Color(color);
@@ -178,11 +175,8 @@ namespace Editor
 
         public void DrawHollowSquare(Vector3 lowLeft, Vector3 highRight, Color color)
         {
-            lowLeft = UnscaledCoords(lowLeft);
-            highRight = UnscaledCoords(highRight);
-            
-            var highLeft = new Vector3(lowLeft.x, highRight.y, 0);
-            var lowRight = new Vector3(highRight.x, lowLeft.y, 0);
+            Vector3 highLeft = new Vector3(lowLeft.x, highRight.y, 0);
+            Vector3 lowRight = new Vector3(highRight.x, lowLeft.y, 0);
 
             GL.Begin(GL.LINE_STRIP);
             GL.Color(color);
@@ -202,10 +196,10 @@ namespace Editor
                 case BackgroundConfig.BackgroundTypes.SOLID_COLOR:
                     break;
                 case BackgroundConfig.BackgroundTypes.CHECKERED:
-                    var start = new Vector3(0, height / 2, 0);
-                    var end = new Vector3(width, height / 2, 0);
+                    Vector3 start = new Vector3(0, height / 2, 0);
+                    Vector3 end = new Vector3(width, height / 2, 0);
                     
-                    for (var i = -height; i < height; i++)
+                    for (float i = -height; i < height; i++)
                     {
                         DrawLine(start, end, Color.gray);
                         start.y -= spacing;
@@ -215,7 +209,7 @@ namespace Editor
                     start = new Vector3(0, height / 2, 0);
                     end = new Vector3(0, -height / 2, 0);
                     
-                    for (var i = 0; i < width; i++)
+                    for (int i = 0; i < width; i++)
                     {
                         DrawLine(start, end, Color.gray);
                         start.x += spacing;
