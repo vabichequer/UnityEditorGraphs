@@ -120,7 +120,7 @@ namespace Editor
                     );
                 
                 WriteOnScreen.DrawWord(
-                    new Vector2(itemXh + ItemMargin * 2, (itemYh + itemYl) / 2 - ItemSize - ItemMargin), 
+                    new Vector2(itemXh + ItemMargin * 2, (itemYh + itemYl) / 2), 
                     10, 
                     itemNames[i], 
                     Color.white);
