@@ -82,7 +82,7 @@ namespace Editor
 
             int bracket = (int)Math.Ceiling(yMax / NumberOfBrackets);
             
-            for (float y = 0f; y <= NumberOfBrackets; y += 1)
+            for (float y = 0f; y < NumberOfBrackets; y += 1)
             {
                 float yBracketed = bracket * y;
                 WriteOnScreen.DrawNumber(ScaledCoords(new Vector2(xMargin - 15, yBracketed)), 10, yBracketed, Color.white);
